@@ -1,139 +1,110 @@
-#include <stdio.h>
-#include <stdlib.h>
+# incluir  < stdio.h >
+# incluir  < stdlib.h >
 
-struct MONTOS{
-    int anio;
-    int bim;
-    char tipo;
-    float imp;
-};
+ estructura typedef
+{
+    int anioImp; // 2020 a 2022
+    int bimestre; // 1 a 6
+    char propiedad; // 'T' Terreno, 'D' Departamento, 'C' Casa, 'L' Local y 'Q' Quinta
+    importación flotante ;
+} sMontos ;
+ estructura typedef
+{
+    int nroContri; // 1 a 15200
+    char tipo; // 'T' Terreno, 'D' Departamento, 'C' Casa, 'L' Local y 'Q' Quinta
+    impaniod int ; // 2020 a 2022
+    bimes int ; // 1 a 6
+} sContribución ;
 
-struct CONTRIB{
-    int nroCont
-    char tipo;
-    int anio;
-    int bim;
-};
+void  cargarArch ();
+int  buscarImp ( sMontos [][ 6 ], sContribu [ 91200 ] , int ); // Matriz de con 6 columnas por los bimestres y filas para el tipo, vector de nroContri*bimestres y entero de cantidad.
+int  validar ( int , int );
 
-void cargarMonto(struct MONTOS[][6],int);
-int validar(int,int);
-int buscarImporte(struct MONTOS[][6],struct CONTRIB[91200],int);
-int main(){
+int  principal ()
+{
+    int anio,x= 0 ,primero= 1 ,maximoBim,pos;
+    int AntContri[ 91200 ];
+    float antBim,importeTotal;
+    ARCHIVO*fcontri;
+    sContribución contri[ 91200 ];
+    sMontos mon[x][ 6 ];
 
-    int anioIn,cCon=0,i=0,j=0,pagosCont[6]={0},maxIndice,tipoEncontrado;
-    float totalBim[6]={0},max,total=0;
-    struct MONTOS mon[5][6],montosCarga;
-    struct CONTRIB contAux[30], cont[30],contAnt;
-
-    printf("Ingrese a�o a utilizar.");
-    anioIn=validar(2020,2022);
-
-	FILE * arc;
-    cargarMonto(mon,anioIn);
-    
-    arc=fopen("contribuyentes.dat","rb");
-    fread(&contAux[cCon],sizeof(struct CONTRIB),1,arc);
-    while(!feof(arc)){
-    	
-        cCon++;
-        fread(&contAux[cCon],sizeof(struct CONTRIB),1,arc);
+    printf ( " Ingrese anio a realizar: " );
+    año= validar ( 2020 , 2022 );
+    cargarArco ();
+    fcontri= fopen ( " CONTRIBUYENTES.dat " , " rb " );
+    si (fcontri== NULL )
+    {
+        printf ( " Error en CONTRIBUYENTES.dat " );
+        sistema ( " pausa " );
+        salida ( 2 );
     }
-    fclose(arc);
-
-	i=0;
-	j=0;
-    while(i<cCon){
-        if(contAux[i].anio==anioIn){
-            cont[j]=contAux[i];
-            j++;
+    fread (&contri[x], sizeof ( sContribu ), 1 ,fcontri);
+    printf ( " Contribuyentes Bimestres " );
+    mientras (! feof (fcontri))
+    {
+        antContri[x]=contri[ 91200 ]. nroContri ;
+        antBim=mon[x][ 6 ]. bimestre ;
+        while (antContri==contri[ 91200 ]. nroContri ||! feof (fcontri))
+        {
+            pos= buscarImp (mon,contri, 91200 );
+            importTotal+=mon[x][ 6 ]. importar ;
+            x++;
+            fread (&contri[x], sizeof ( sContribu ), 1 ,fcontri);
         }
-        i++;
+        printf ( " %d                       %.2f  %.2f  %.2f  %.2f  %.2f  %.2f \n " ,contri[pos]. nroContri ,antBim); // Punto C
     }
-    j=0;
-    i=0;
-    printf("\nContribuyente\t\t\t\t\t\tBIMESTRES");
-    printf("\n\t\t\t1\t\t2\t\t3\t\t4\t\t5\t\t6");
-    while(i<cCon){
-        contAnt=cont[i];
-        printf("\n%d\t\t\t",contAnt.nroCont);
-        while(i<cCon && contAnt.nroCont==cont[i].nroCont){
-            pagosCont[cont[i].bim-1]=1;
-            //punto 1
-            tipoEncontrado=buscarImporte(mon,cont,i);
-            total+=mon[tipoEncontrado][cont[i].bim-1].imp;
-            //puinto 2
-            totalBim[cont[i].bim-1]+=mon[tipoEncontrado][cont[i].bim-1].imp;
-            i++;
+    printf ( " Importe total: %.2f " ,importeTotal); // Punto A
+    if (antBim>maximoBim || primero== 0 )
+        {
+            maximoBim=antBim;
+            primero= 1 ;
         }
-        for(j=0;j<6;j++){
-            if(pagosCont[j]==0) printf("No pago\t\t");
-            else{
-                printf("Pago\t\t");
-                pagosCont[j]=0;
-            } 
-        }
-    }
+    más
+        primero= 0 ;
 
-    printf("\nEl total recaudado es: %g",total);
-    for(i=0;i<6;i++){
-        if(totalBim[i]>max || i==0){
-            max=totalBim[i];
-            maxIndice=i;
-        }
-    }
-    printf("\nEl bimestre que mas recaudo es: %d",maxIndice+1);
+    printf ( " El maximo bimestre es: %d " ,maximoBim);
 
-
-getch();
+  devolver  0 ;
 }
-
-void cargarMonto(struct MONTOS mon[][6],int anioIn){
-    int cMon=0, i=0, flag=0,j=0,k=0;
-    struct MONTOS montos[90];//6*5*3=90
-
-    FILE * arc;
-    arc=fopen("montos.dat","rb");
-    fread(&montos[cMon],sizeof(struct MONTOS),1,arc);
-    while(!feof(arc)){
-        cMon++;
-        fread(&montos[cMon],sizeof(struct MONTOS),1,arc);
+vacío  cargarArch ()
+{
+    intx ;
+    sMontos montos[x][ 6 ];
+    ARCHIVO*fmontos;
+    fmontos= fopen ( " montos.dat " , " rb " );
+    si (fmontos== NULL )
+    {
+        printf ( " Error en montos.dat " );
+        sistema ( " pausa " );
+        salida ( 1 );
     }
-    fclose(arc);
-
-    while(flag==0 && i<cMon){
-        if(montos[i].anio==anioIn){
-            for(j=0;j<5;j++){
-            	printf("\n");
-                for(k=0;k<6;k++){
-                    mon[j][k]=montos[i];
-                    printf("\n%d,%d,%c,%g",mon[j][k].anio,mon[j][k].bim,mon[j][k].tipo,mon[j][k].imp);
-                    i++;
-                }
-            }
-            flag=1;
-        }else{
-            i+=30;
-        }
-    n}
+    fread (&montos[x][ 6 ], sizeof ( sMontos ), 1 ,fmontos);
+    mientras (! feof (fmontos))
+    {
+        x++;
+        fread (&montos[x][ 6 ], sizeof ( sMontos ), 1 ,fmontos);
+    }
 };
-
-int validar(int min, int max){
-    int num;
-    do{
-        scanf("%d",&num);
-    }while(num<min && num>max);
-    return num;
-}
-
-int buscarImporte(struct MONTOS monto[][6],struct CONTRIB cont[],int indice){
-    int j=0, tipoEncontrado,flag=0;
-    while(flag==0 && j<6){
-        if(monto[j][0].tipo==cont[indice].tipo){
-            tipoEncontrado=j;
-            flag=1;
-        }
-        j++;
+int  buscarImp ( sMontos moni[][ 6 ], sContribuir contris[ 91200 ] , int cant)
+{
+    int pos=- 1 ,i= 0 ;
+    mientras (pos==- 1 &&i<cant)
+    {
+        if (moni[i][ 6 ]. propiedad ==contris[ 91200 ]. tipo )
+            pos=yo;
+        más
+            yo++;
     }
-    return tipoEncontrado;
-}
 
+    volver pos;
+};
+int  validar ( int min, int max)
+{
+    dato int ;
+
+    hacer { scanf ( " %d " ,&dato);
+    } while (dato<min||dato>max);
+
+    dato de retorno ;
+};
